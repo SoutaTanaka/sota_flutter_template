@@ -1,0 +1,17 @@
+name: adapter
+description: Data adapters package
+version: 0.0.1
+
+environment:
+  sdk: ^3.7.0
+resolution: workspace
+
+dependencies:
+  model:
+    path: ../../domain/model
+  repository:
+    path: ../../domain/repository
+
+dev_dependencies:
+  lints: ^5.1.1
+  very_good_analysis: ^7.0.0 

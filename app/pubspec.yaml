@@ -1,0 +1,33 @@
+name: sota_flutter_template
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  components:
+    path: ../packages/components
+  model:
+    path: ../packages/domain/model
+  repository:
+    path: ../packages/domain/repository
+  adapter:
+    path: ../packages/data/adapter
+  local:
+    path: ../packages/data/local
+  api:
+    path: ../packages/data/api
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^7.0.0
+
+flutter:
+  uses-material-design: true 
