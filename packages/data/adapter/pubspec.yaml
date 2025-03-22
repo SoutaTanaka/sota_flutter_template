@@ -1,6 +1,7 @@
 name: adapter
 description: Data adapters package
 version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ^3.7.0

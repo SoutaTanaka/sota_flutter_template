@@ -18,7 +18,7 @@ sota_flutter_template/
 │   │   ├── api/          # API通信関連
 │   │   └── local/        # ローカルストレージ関連
 │   └── presentation/     # プレゼンテーション層
-│       ├── components/   # 共通UIコンポーネント
+│       ├── component/   # 共通UIコンポーネント
 │       └── page/         # 画面コンポーネント
 └── pubspec.yaml          # ワークスペース設定
 ```
@@ -37,7 +37,7 @@ sota_flutter_template/
 - **local**: ローカルストレージへのアクセスを提供します
 
 ### プレゼンテーション層
-- **components**: 再利用可能なUIコンポーネントを提供します
+- **component**: 再利用可能なUIコンポーネントを提供します
 - **page**: アプリケーションの画面コンポーネントを提供します
 
 ## 依存関係の方向

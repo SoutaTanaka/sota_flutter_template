@@ -1,6 +1,7 @@
 name: page
 description: Shared pages package
 version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ^3.7.0
@@ -10,8 +11,8 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  components:
-    path: ../components
+  component:
+    path: ../component
 
 dev_dependencies:
   flutter_test:
