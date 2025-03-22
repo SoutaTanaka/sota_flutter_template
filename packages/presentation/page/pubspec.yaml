@@ -1,0 +1,20 @@
+name: page
+description: Shared pages package
+version: 0.0.1
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=3.0.0"
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  components:
+    path: ../components
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  very_good_analysis: ^7.0.0 
