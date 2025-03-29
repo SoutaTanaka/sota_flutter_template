@@ -15,10 +15,13 @@ alwaysApply: false
 2. **依存性逆転の原則**: ビジネスロジックはリポジトリの具体的な実装ではなく、インターフェースに依存すべきです。
 3. **インターフェースセグリゲーション**: 大きな汎用インターフェースよりも、複数の特化したインターフェースを優先します。
 
+## 実装ルール
+- 実装の際は必ずabstract interface classを使用してください。
+- 実装するファイルのパスは`packages/domain/repository/lib/src/<ドメイン名>_repository.dart`とします。
+
 ## 命名規則
 
 - インターフェース名は扱うドメイン名に`Repository` サフィックスを付けます。例: `UserRepository`
-  - 実装の際は必ずabstract interface classを使用してください。
 - メソッド名は以下の接頭辞に従うべきです:
   - `get`: 単一のエンティティを取得
   - `getAll`: 複数のエンティティを取得
@@ -36,65 +39,65 @@ abstract interface class UserRepository {
   ///
   /// [userId] 取得するユーザーのID
   ///
-  /// 成功時は [User] オブジェクトを返す
-  /// ユーザーが存在しない場合は [UserNotFoundException] をスローする
-  Future<User> getUser(String userId);
+  /// 成功時は [User] オブジェクトを含む [Success] を返す
+  /// ユーザーが存在しない場合や取得に失敗した場合は [Failure] を返す
+  Future<Result<User>> getUser(String userId);
 
   /// すべてのユーザーを取得する
   ///
-  /// 成功時は [User] オブジェクトのリストを返す
-  /// ユーザーが存在しない場合は空のリストを返す
-  Future<List<User>> getAllUsers();
+  /// 成功時は [User] オブジェクトのリストを含む [Success] を返す
+  /// 取得に失敗した場合は [Failure] を返す
+  Future<Result<List<User>>> getAllUsers();
 
   /// 指定された役割を持つユーザーを検索する
   ///
   /// [role] 検索するユーザーの役割
   ///
-  /// 条件に一致するユーザーのリストを返す
-  /// 一致するユーザーが存在しない場合は空のリストを返す
-  Future<List<User>> findUsersByRole(UserRole role);
+  /// 成功時は条件に一致するユーザーのリストを含む [Success] を返す
+  /// リストは空の場合もあります
+  /// 検索に失敗した場合は [Failure] を返す
+  Future<Result<List<User>>> findUsersByRole(UserRole role);
 
   /// 新しいユーザーを作成する
   ///
   /// [user] 作成するユーザーのオブジェクト
   ///
-  /// 成功時は保存された [User] オブジェクトを返す
-  /// 作成に失敗した場合は [RepositoryException] をスローする
-  Future<User> createUser(User user);
+  /// 成功時は保存された [User] オブジェクトを含む [Success] を返す
+  /// 作成に失敗した場合は [Failure] を返す
+  Future<Result<User>> createUser(User user);
 
   /// 既存のユーザーを更新する
   ///
   /// [user] 更新するユーザーのオブジェクト
   ///
-  /// 成功時は更新された [User] オブジェクトを返す
-  /// ユーザーが存在しない場合は [UserNotFoundException] をスローする
-  /// 更新に失敗した場合は [RepositoryException] をスローする
-  Future<User> updateUser(User user);
+  /// 成功時は更新された [User] オブジェクトを含む [Success] を返す
+  /// ユーザーが存在しない場合や更新に失敗した場合は [Failure] を返す
+  Future<Result<User>> updateUser(User user);
 
   /// 指定されたIDのユーザーを削除する
   ///
   /// [userId] 削除するユーザーのID
   ///
-  /// 削除に成功した場合は void を返す
-  /// ユーザーが存在しない場合は [UserNotFoundException] をスローする
-  /// 削除に失敗した場合は [RepositoryException] をスローする
-  Future<void> deleteUser(String userId);
+  /// 削除に成功した場合は void を含む [Success] を返す
+  /// ユーザーが存在しない場合や削除に失敗した場合は [Failure] を返す
+  Future<Result<void>> deleteUser(String userId);
 
   /// 指定されたIDのユーザーが存在するかを確認する
   ///
   /// [userId] 確認するユーザーのID
   ///
-  /// ユーザーが存在する場合は true、存在しない場合は false を返す
-  Future<bool> existsById(String userId);
+  /// 成功時は存在確認結果の真偽値を含む [Success] を返す
+  /// 確認に失敗した場合は [Failure] を返す
+  Future<Result<bool>> existsById(String userId);
   
   /// ユーザー名とパスワードで認証を行う
   ///
   /// [username] ユーザー名
   /// [password] パスワード
   ///
-  /// 認証に成功した場合はユーザーオブジェクトを返す
-  /// 認証に失敗した場合は [AuthenticationException] をスローする
-  Future<User> authenticateUser(String username, String password);
+  /// 認証に成功した場合はユーザーオブジェクトを含む [Success] を返す
+  /// 認証に失敗した場合は [Failure] を返す
+  Future<Result<User>> authenticateUser(String username, String password);
 }
 ```
 
@@ -120,29 +123,30 @@ abstract interface class UserRepository {
    - メソッドの目的を簡潔に説明する
    - すべてのパラメータを `[paramName]` 形式で文書化する
    - 戻り値の型と意味を説明する
-   - スローされる可能性のある例外を記述する
+   - 成功時と失敗時の結果を記述する
 
 ```dart
 /// 指定されたIDのユーザーを取得する
 ///
 /// [userId] 取得するユーザーのID
 ///
-/// 成功時は [User] オブジェクトを返す
-/// ユーザーが存在しない場合は [UserNotFoundException] をスローする
-Future<User> getUser(String userId);
+/// 成功時は [User] オブジェクトを含む [Success] を返す
+/// ユーザーが存在しない場合や取得に失敗した場合は [Failure] を返す
+Future<Result<User>> getUser(String userId);
 ```
 
 ## 戻り値の型
 
-- すべての非同期操作は `Future` または `Stream` を返すべきです。
-- 操作が失敗する可能性がある場合は例外をthrowするべきです。Result型は使用しないでください。
-- `null` の戻り値は避け、空のコレクションや例外をthrowするべきです。
+- すべての非同期操作は `Future<Result<T>>` または `Stream<Result<T>>` を返すべきです。
+- `Result`型は成功（`Success`）と失敗（`Failure`）の両方のケースをカプセル化します。
+- 失敗の場合は、`Failure`に適切な`DomainException`を含めるべきです。
+- `null`の戻り値は避け、空のコレクションや`Result`型で適切にハンドリングするべきです。
 
 ## エラーハンドリング
 
-- リポジトリの実装での例外は、ドメイン固有の例外にマッピングすべきです。
-- ネットワークエラーやデータベース接続の問題など、予期せぬ例外は適切に処理すべきです。
-- リポジトリメソッドの規約として例外をドキュメント化します。
+- リポジトリの実装での例外は、ドメイン固有の例外にマッピングし、`Result.failure()`で返すべきです。
+- ネットワークエラーやデータベース接続の問題など、予期せぬ例外は適切な`DomainException`に変換して返すべきです。
+- リポジトリメソッドの規約として失敗時の結果をドキュメント化します。
 
 ## ベストプラクティス
 

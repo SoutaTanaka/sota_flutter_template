@@ -14,16 +14,10 @@ dependencies:
     path: ../packages/presentation/component
   page:
     path: ../packages/presentation/page
-  model:
-    path: ../packages/domain/model
-  repository:
-    path: ../packages/domain/repository
-  adapter:
-    path: ../packages/data/adapter
-  local:
-    path: ../packages/data/local
-  api:
-    path: ../packages/data/api
+  domain:
+    path: ../packages/domain
+  data:
+    path: ../packages/data
 
 dev_dependencies:
   flutter_test:

@@ -6,11 +6,8 @@ workspace:
   - app
   - packages/presentation/component
   - packages/presentation/page
-  - packages/domain/model
-  - packages/domain/repository
-  - packages/data/adapter
-  - packages/data/local
-  - packages/data/api
+  - packages/domain
+  - packages/data
 
 dependencies:
   flutter:
