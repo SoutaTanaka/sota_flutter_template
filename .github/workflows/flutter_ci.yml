@@ -1,0 +1,45 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  flutter-ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Flutter version from FVM
+        id: fvm
+        run: |
+          FVM_VERSION=$(cat .fvmrc | jq -r '.flutter')
+          echo "FLUTTER_VERSION=$FVM_VERSION" >> $GITHUB_ENV
+          echo "Flutter version from FVM: $FVM_VERSION"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          flutter pub global activate melos 7.0.0-dev.7
+          flutter pub get
+          melos bootstrap
+
+      - name: Check formatting
+        run: melos run format:check
+
+      - name: Run analyzer
+        run: melos run analyze
+
+      - name: Run tests
+        run: melos run test 
