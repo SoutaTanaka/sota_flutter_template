@@ -18,6 +18,39 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  melos: ^7.0.0-dev.7
 
 flutter:
   uses-material-design: true
+
+melos:
+  name: sota_flutter_template
+  repository: https://github.com/yourusername/sota_flutter_template
+  
+  command:
+    version:
+      # Only allow versioning to happen on main branch
+      branch: main
+      # Generates a link to a prefilled GitHub release creation page
+      generateReleaseUrl: true
+  
+  scripts:
+    analyze:
+      description: Run the Flutter analyzer for all packages.
+      run: |
+        melos exec --fail-fast -- "flutter analyze ."
+      
+    test:
+      description: Run Flutter tests for all packages.
+      run: |
+        melos exec --fail-fast --dir-exists="test" -- "flutter test --no-pub"
+      
+    format:
+      description: Format Dart files in all packages.
+      run: |
+        melos exec -- "dart format ."
+        
+    format:check:
+      description: Check if Dart files are formatted correctly.
+      run: |
+        melos exec -- "dart format --set-exit-if-changed ."
